@@ -4,10 +4,56 @@
 
 #import needed libraries
 import random
+import urllib2
+import csv
 import argparse
 from pprint import pprint
 import time
 import decimal
+
+def downloadData(url):
+    """Downloads data from URL
+
+    Args:
+        url (string): string value for URL data fetch
+
+    Returns:
+        data: something to return
+    """
+    value = urllib2.Request(url)
+    data = urllib2.urlopen(value)
+
+    # print data.read()
+    return data
+
+def processData(fileContents):
+    """Processes data passed in
+
+    Args:
+        fileContents (object): string value the data file
+
+    Returns:
+        full_database: something to return
+    """
+
+    #print fileContents.read()
+    full_database = {}
+
+    reader = csv.reader(fileContents, delimiter=',')
+
+    for row, item in enumerate(reader):
+        full_database [row] = {
+            'Time_Value': item[0],
+            'File': item[1],
+            'Time_Spent': item[2]
+        }
+
+        print row
+
+    #print 'Image requests account for 45.3% of all requests', img_hit_counter
+    #print fileContents.read()
+
+    return full_database
 
 class Printer:
     def __init__(self, ppm):
@@ -45,11 +91,16 @@ class Task:
     def wait_time(self, current_time):
         return current_time - self.timestamp
 
+def simulateOneServe():
+    print 'simulate'
 
-#http: // s3.amazonaws.com / cuny - is211 - spring2015 / requests.csv
 
 def main():
-    print 'hello'
+    url = 'http://s3.amazonaws.com/cuny-is211-spring2015/requests.csv'
+    csvData = downloadData(url)
+
+    databaseData = processData(csvData)
+    #pprint (databaseData)
 
 
 if __name__ == '__main__':
